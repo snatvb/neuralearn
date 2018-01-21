@@ -1,4 +1,4 @@
-class Neuron {
+class Perceptron {
     mul: number[][];
     weight: number[][];
     input: number[][];
@@ -86,4 +86,4 @@ class Neuron {
     }
 }
 
-export default Neuron;
+export default Perceptron;

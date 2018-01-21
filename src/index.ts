@@ -1,4 +1,4 @@
-import Neuron from './Neuron';
+import Perceptron from './Perceptron';
 import {loadImage, drawImg, getMatrixImg} from './utils';
 import {fileList, IFileImage} from './contants';
 
@@ -8,21 +8,21 @@ const canvasContainer = document.getElementById('canvas-container');
 const resultBlock = document.getElementById('result');
 canvasContainer.appendChild(canvas);
 
-const neuron = new Neuron(3, 5);
-neuron.limit = 30;
-console.log(neuron);
+const perceptron = new Perceptron(3, 5);
+perceptron.limit = 40;
+console.log(perceptron);
 
 function toTeach(img: HTMLImageElement) {
     canvas.width = img.width;
     canvas.height = img.height;
     drawImg(ctx, img);
-    const matrix = getMatrixImg(ctx, neuron.size.x, neuron.size.y);
-    neuron.setInput(matrix);
+    const matrix = getMatrixImg(ctx, perceptron.size.x, perceptron.size.y);
+    perceptron.setInput(matrix);
 
-    neuron.mulW();
-    neuron.summa();
-    console.log('sum:', neuron.sum, 'wight:', neuron.weight);
-    resultBlock.innerText = `${neuron.result() ? "this is 5" : "this is not 5"}`;
+    perceptron.mulW();
+    perceptron.summa();
+    console.log('sum:', perceptron.sum, 'wight:', perceptron.weight);
+    resultBlock.innerText = `${perceptron.result() ? "this is 5" : "this is not 5"}`;
     return matrix;
 }
 
@@ -41,9 +41,9 @@ function load(fileImage: IFileImage = null) {
 
 function autoTeacher() {
     let iterations = 0;
-    let maxIterations = 1000;
+    let maxIterations = 5000;
     let successively = 0;
-    let needSuccessively = 20;
+    let needSuccessively = 70;
 
     function doTeach() {
         const filename = getRandomFile();
@@ -52,8 +52,8 @@ function autoTeacher() {
             .then(() => {
                     iterations++;
                     if (iterations > maxIterations) return;
-                    const result = neuron.result();
-                    const correcting = () => result ? neuron.decW() : neuron.incW();
+                    const result = perceptron.result();
+                    const correcting = () => result ? perceptron.decW() : perceptron.incW();
                     if(number !== 5 && result) {
                         correcting();
                         successively = 0;
@@ -93,15 +93,15 @@ class ControllerUI {
     }
 
     private correctClick() {
-        // neuron.incW();
+        // perceptron.incW();
         this.reloadData();
     }
 
     private incorrectClick() {
-        if (neuron.result()) {
-            neuron.decW();
+        if (perceptron.result()) {
+            perceptron.decW();
         } else {
-            neuron.incW();
+            perceptron.incW();
         }
         this.reloadData();
     }
